@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  bringel_app:
+    container_name: bringel_app
+    build: .
+    ports:
+      - "8888:8000"
+    environment:
+      - PG_USER=postgres
+      - PG_PASSWORD=postgres
+      - PG_DB=postgres
+      - PG_PORT=5432
+      - PG_HOST=bringel_db
+    volumes:
+        - ./:/app/
+    depends_on:
+      - bringel_db
+
+  bringel_db:
+    container_name: bringel_db
+    image: postgres:16.1
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5433:5432"
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+
+# volumes:
+#   pgdata: {}

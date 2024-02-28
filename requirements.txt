@@ -1,0 +1,7 @@
+autopep8==2.0.4
+Django==5.0.2
+psycopg2-binary==2.9.9
+djangorestframework==3.14.0
+drf-yasg==1.21.7
+faker==13.15.1
+# oauthlib==2.0.2
