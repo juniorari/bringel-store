@@ -5,9 +5,9 @@ app_name = 'product'
 
 # CRUD Product
 urlpatterns = [
-    path('', views.getProducts),
-    # path('create', views.addProduct),
-    # path('read/<str:pk>', views.getProduct),
-    # path('update/<str:pk>', views.updateProduct),
-    # path('delete/<str:pk>', views.deleteProduct),
+    path('', views.getProducts, name='products'),
+    path('create', views.addProduct, name='createproduct'),
+    path('<str:pk>', views.getProduct, name='readproduct'),
+    path('update/<str:pk>', views.updateProduct, name='updateproduct'),
+    path('delete/<str:pk>', views.deleteProduct, name='deleteproduct'),
 ]

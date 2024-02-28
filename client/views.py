@@ -3,16 +3,18 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.models import Client
 from .serializers import ClientSerializer
-# Create your views here.
+from api.pagination import CustomResultsSetPagination
 
 
 @api_view(['GET'])
 def getClients(request):
     users = Client.objects.all()
-    serializer = ClientSerializer(users, many=True)
+    paginator = CustomResultsSetPagination()
+    result_page = paginator.paginate_queryset(users, request)
+    serializer = ClientSerializer(result_page, many=True, context={'request':request})
     return Response(serializer.data)
 
-
+    
 @api_view(['GET'])
 def getClient(request, pk):
     try:
@@ -52,9 +54,7 @@ def deleteClient(request, pk):
         user = Client.objects.get(id=pk)
         user.delete()
         return Response({"success": "Usuário apagado com sucesso!"})
-    # except Exception as error:
     except Client.DoesNotExist as error:
-        print('client', error)
         return Response({"error": "Cliente não existe"}, status=status.HTTP_404_NOT_FOUND)
     except:
         print('NameError, ImportError')

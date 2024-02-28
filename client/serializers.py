@@ -6,15 +6,9 @@ from utils.validacpf import valida_cpf
 
 class ClientSerializer(serializers.ModelSerializer):
 
-    password = serializers.CharField(
-        write_only=True,
-        required=True,
-        style={'input_type': 'password', 'placeholder': 'Senha'}
-    )
-
     class Meta:
         model = Client
-        fields = '__all__'
+        fields = ('id', 'name', 'username', 'email', 'cpf',)
 
     def create(self, validated_data):
         validated_data['password'] = make_password(

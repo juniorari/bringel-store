@@ -115,3 +115,9 @@ class ProviderEcommerce(faker.providers.BaseProvider):
     def ecommerce_category(self):
         """Fake categories names."""
         return self.random_element(CATEGORIES)
+
+    def categories():
+        lista = [];
+        for i in CATEGORIES:
+            lista.append((i, i))
+        return tuple(lista)

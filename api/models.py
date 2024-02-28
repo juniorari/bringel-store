@@ -1,5 +1,5 @@
 from django.db import models
-# from utils.validacpf import valida_cpf
+from utils.faker_ecommerce import ProviderEcommerce
 
 
 class Supplier(models.Model):
@@ -18,7 +18,7 @@ class Supplier(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=250)
     sku = models.CharField(max_length=10)
-    categorie = models.CharField(max_length=50)
+    category = models.CharField(max_length=50, choices=ProviderEcommerce.categories())
     price = models.FloatField(default=0.0)
     supplier = models.ForeignKey(
         "Supplier", on_delete=models.SET_NULL, null=True)
@@ -61,13 +61,3 @@ class Client(models.Model):
     def __str__(self):
         return f'{self.name}'
     
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'title': self.title,
-            'sinopse': self.sinopse,
-            'rating': self.rating,
-            'like': self.like,
-            'created': self.created,
-        }
-
