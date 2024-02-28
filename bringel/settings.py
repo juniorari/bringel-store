@@ -29,7 +29,6 @@ INSTALLED_APPS = [
 
     'drf_yasg',
 
-    'api',
     'client',
     'product',
 
@@ -78,7 +77,7 @@ DATABASES = {
         'USER': os.environ.get('PG_USER', 'postgres'),
         'PASSWORD': os.environ.get('PG_PASSWORD', 'postgres'),
         'NAME': os.environ.get('PG_DB', 'postgres'),
-        'PORT': os.environ.get('PG_PORT', '5432'),
+        'PORT': os.environ.get('PG_PORT', '5433'),
         'HOST': os.environ.get('PG_HOST', 'localhost'),
     }
 }
@@ -138,6 +137,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # }
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'api.pagination.CustomResultsSetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'bringel.pagination.CustomResultsSetPagination',
     'PAGE_SIZE': 5
 }

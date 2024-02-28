@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Client
+from client.models import Client
 from django.contrib.auth.hashers import make_password
 from utils.validacpf import valida_cpf
 

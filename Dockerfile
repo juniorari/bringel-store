@@ -1,7 +1,7 @@
 FROM python:3.12.0
 
 # Set unbuffered output for python
-ENV PYTHONUNBUFFERED 1
+# ENV PYTHONUNBUFFERED 1
 
 # Create app directory
 WORKDIR /app
@@ -17,5 +17,5 @@ RUN pip install -r requirements.txt
 # Expose port
 EXPOSE 8888
 
-# entrypoint to run the django.sh file
-ENTRYPOINT ["/app/django.sh"]
+# entrypoint to run the bringel.sh file
+ENTRYPOINT ["/app/bringel.sh"]

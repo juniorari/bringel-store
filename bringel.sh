@@ -1,8 +1,8 @@
 #!/bin/bash
 echo "Creating Migrations..."
-# python manage.py migrate api zero
 # python manage.py migrate auth zero
 # python manage.py migrate client zero
+# python manage.py migrate product zero
 python manage.py makemigrations
 echo ====================================
 
@@ -12,6 +12,7 @@ echo ====================================
 
 echo "Fake Data..."
 python create_fakers.py
+python manage.py createsuperuser --username admin --email email@email.com
 echo ====================================
 
 echo "Starting Server..."

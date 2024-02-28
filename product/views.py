@@ -1,9 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import Product
+from client.models import Product
 from .serializers import ProductSerializer
-from api.pagination import CustomResultsSetPagination
+from bringel.pagination import CustomResultsSetPagination
 
 
 @api_view(['GET'])

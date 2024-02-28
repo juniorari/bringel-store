@@ -13,10 +13,11 @@ def main():
         print(f"Fornecedor: {obj.name}")
 
     for _ in range(50):
+        sku=fake.pyint(100000, 999999)
         obj = Product.objects.create(
             name=fake.ecommerce_name(),
-            sku=fake.pyint(1000000000, 9999999999),
-            categorie=fake.ecommerce_category(),
+            sku="sku-" + str(sku),
+            category=fake.ecommerce_category(),
             price=fake.pyfloat(positive=True, right_digits=2, left_digits=4),
             supplier_id=random.randint(1, 5)
         )
@@ -51,7 +52,7 @@ if __name__ == "__main__":
 
     import random
     from faker import Faker
-    from api.models import Product, Supplier, Client, RatingProduct
+    from client.models import Product, Supplier, Client, RatingProduct
     from django.contrib.auth.hashers import make_password
     from utils.faker_ecommerce import ProviderEcommerce
 
