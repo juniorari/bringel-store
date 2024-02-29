@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_1*tkffz454xve8c7-#omg$@)sp^gmi&^!#)u4+)a328s5jn(2'
+SECRET_KEY = '1*tkffz454xve8c7-#omg$@)sp^gmi&^!#)u4+)a328s5jn(2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -140,3 +140,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'bringel.pagination.CustomResultsSetPagination',  # noqa: E501
     'PAGE_SIZE': 5
 }
+
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")

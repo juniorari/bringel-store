@@ -4,6 +4,10 @@ services:
   bringel_app:
     container_name: bringel_app
     build: .
+    command: >
+      bash -c "python manage.py makemigrations &&
+                  python manage.py migrate &&
+                  python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8888:8000"
     environment:
@@ -12,10 +16,15 @@ services:
       - PG_DB=postgres
       - PG_PORT=5432
       - PG_HOST=bringel_db
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
     volumes:
-        - ./:/app/
+      - ./:/app/
     depends_on:
       - bringel_db
+      - redis
 
   bringel_db:
     container_name: bringel_db
@@ -28,6 +37,23 @@ services:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  worker:
+    build: .
+    command: celery -A bringel worker -l INFO
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - bringel_app
+      - redis
+
+  redis:
+    image: "redis:alpine"
 
 volumes:
   pgdata: {}

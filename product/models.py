@@ -54,3 +54,9 @@ class PriceHistory(models.Model):
     old_price = models.FloatField(default=0.0)
     new_price = models.FloatField(default=0.0)
     alter_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Histórico de Preço'
+
+    def __str__(self):
+        return f'{self.product.name}'
