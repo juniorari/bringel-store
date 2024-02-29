@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import ListAPIView
-from .models import Product
+from .models import Product, PriceHistory
 from .serializers import ProductSerializer
 from bringel.pagination import CustomResultsSetPagination
 
@@ -39,8 +39,8 @@ class ProductAPIList(ListAPIView):
 @api_view(['GET'])
 def getProduct(request, pk):
     try:
-        user = Product.objects.get(id=pk)
-        serializer = ProductSerializer(user, many=False)
+        data = Product.objects.get(id=pk)
+        serializer = ProductSerializer(data, many=False)
         return Response(serializer.data)
     except Product.DoesNotExist:
         return Response({"error": "Producte não existe"},
@@ -60,22 +60,32 @@ def addProduct(request):
 @api_view(['PUT'])
 def updateProduct(request, pk):
     try:
-        user = Product.objects.get(id=pk)
-        serializer = ProductSerializer(instance=user, data=request.data)
+        data = Product.objects.get(id=pk)
+        old_price = data.price
+        serializer = ProductSerializer(instance=data, data=request.data)
 
         serializer.is_valid(raise_exception=True)
+        new_price = request.data.get('price', '')
         serializer.save()
+
+        if (old_price != new_price):
+            PriceHistory.objects.create(
+                product_id=data.id,
+                old_price=old_price,
+                new_price=new_price
+            )
+
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Product.DoesNotExist:
-        return Response({"error": "Producte não existe"},
+        return Response({"error": "Produto não existe"},
                         status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['DELETE'])
 def deleteProduct(request, pk):
     try:
-        user = Product.objects.get(id=pk)
-        user.delete()
+        data = Product.objects.get(id=pk)
+        data.delete()
         return Response({"success": "Produto apagado com sucesso!"})
     except Product.DoesNotExist:
         return Response({"error": "Produto não existe"},

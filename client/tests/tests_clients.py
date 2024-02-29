@@ -69,7 +69,7 @@ class CLientHTTPResponseTest(TestCase):
         self.assertEqual(response.content.decode(),
                          '{"cpf":["O CPF 123.456.789-00 é inválido"]}')
 
-    def test_create_client_success_201(self):
+    def test_create_client_success_create_201(self):
         post_data = {
             'name': 'Teste Cliente',
             'username': 'testenome',
@@ -80,3 +80,24 @@ class CLientHTTPResponseTest(TestCase):
         url = reverse('client:createclient')
         response = self.client.post(url, post_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    # def test_update_client_success_update_200(self):
+    #     post_data = {
+    #         'name': 'Teste Cliente',
+    #         'username': 'testenome',
+    #         'password': '123456',
+    #         'email': 'email@teste.net',
+    #         'cpf': '621.609.153-00'
+    #     }
+    #     url = reverse('client:createclient')
+    #     print(url)
+    #     response = self.client.post(url, post_data)
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    #     post_data = {
+    #         'name': 'Teste Cliente 2',
+    #         'username': 'teste2'
+    #     }
+    #     url = '/client/update/1'
+    #     response = self.client.put(url, post_data)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
