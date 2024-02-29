@@ -12,14 +12,16 @@ def main():
         )
         print(f"Fornecedor: {obj.name}")
 
+    idsSupplier = [data.id for data in Supplier.objects.all()]
+
     for _ in range(50):
-        sku=fake.pyint(100000, 999999)
+        sku = fake.pyint(100000, 999999)
         obj = Product.objects.create(
             name=fake.ecommerce_name(),
             sku="sku-" + str(sku),
             category=fake.ecommerce_category(),
             price=fake.pyfloat(positive=True, right_digits=2, left_digits=4),
-            supplier_id=random.randint(1, 5)
+            supplier_id=random.choice(idsSupplier)
         )
         print(f"Produto: {obj.name}")
 
@@ -33,10 +35,13 @@ def main():
         )
         print(f"Cliente: {obj.name}")
 
+    idsClien = [data.id for data in Client.objects.all()]
+    idsProds = [data.id for data in Product.objects.all()]
+
     for _ in range(100):
         obj = RatingProduct.objects.create(
-            client_id=random.randint(1, 10),
-            product_id=random.randint(1, 50),
+            client_id=random.choice(idsClien),
+            product_id=random.choice(idsProds),
             rating=random.randint(1, 5),
         )
         print(f"Avaliação: {obj.id} - [{obj.product_id} - {obj.client_id}]")
