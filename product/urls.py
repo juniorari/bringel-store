@@ -6,6 +6,8 @@ app_name = 'product'
 # CRUD Product
 urlpatterns = [
     path('', views.ProductAPIList.as_view(), name='products'),
+    path('history-price/<str:pk>',
+         views.PriceHistoryAPIList.as_view(), name='historypriceproduct'),
     path('create', views.addProduct, name='createproduct'),
     path('<str:pk>', views.getProduct, name='readproduct'),
     path('update/<str:pk>', views.updateProduct, name='updateproduct'),

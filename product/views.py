@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 from .models import Product, PriceHistory
-from .serializers import ProductSerializer
+from .serializers import ProductSerializer, PriceHistorySerializer
 from bringel.pagination import CustomResultsSetPagination
 
 
@@ -33,6 +33,21 @@ class ProductAPIList(ListAPIView):
         if (supplier_id != '' and supplier_id.isnumeric()):
             qs = qs.filter(supplier_id=supplier_id)
 
+        return qs
+
+
+class PriceHistoryAPIList(ListAPIView):
+    """
+    Get all price history from a product
+    """
+    queryset = PriceHistory.objects.all()
+    serializer_class = PriceHistorySerializer
+    pagination_class = CustomResultsSetPagination
+
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        qs = super().get_queryset()
+        qs = qs.filter(product_id=pk)
         return qs
 
 
