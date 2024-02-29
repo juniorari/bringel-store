@@ -58,7 +58,7 @@ def getProduct(request, pk):
         serializer = ProductSerializer(data, many=False)
         return Response(serializer.data)
     except Product.DoesNotExist:
-        return Response({"error": "Producte não existe"},
+        return Response({"error": "Produto não existe"},
                         status=status.HTTP_404_NOT_FOUND)
 
 

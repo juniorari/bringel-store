@@ -16,3 +16,12 @@ class Client(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'name': self.name,
+    #         'username': self.username,
+    #         'email': self.email,
+    #         'cpf': self.cpf,
+    #     }
