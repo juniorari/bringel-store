@@ -5,7 +5,7 @@ app_name = 'client'
 
 # CRUD client
 urlpatterns = [
-    path('', views.getClients, name='clients'),
+    path('', views.ClientAPIList.as_view(), name='clients'),
     path('create', views.addClient, name='createclient'),
     path('<str:pk>', views.getClient, name='readclient'),
     path('update/<str:pk>', views.updateClient, name='updateclient'),

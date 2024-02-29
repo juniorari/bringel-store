@@ -5,7 +5,7 @@ app_name = 'product'
 
 # CRUD Product
 urlpatterns = [
-    path('', views.getProducts, name='products'),
+    path('', views.ProductAPIList.as_view(), name='products'),
     path('create', views.addProduct, name='createproduct'),
     path('<str:pk>', views.getProduct, name='readproduct'),
     path('update/<str:pk>', views.updateProduct, name='updateproduct'),
