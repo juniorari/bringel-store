@@ -1,3 +1,48 @@
 from django.db import models
+from utils.faker_ecommerce import ProviderEcommerce
+from client.models import Client
 
-# Create your models here.
+
+class Supplier(models.Model):
+    name = models.CharField(max_length=250)
+    email = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = 'Fornecedor'
+        verbose_name_plural = 'Fornecedores'
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=250)
+    sku = models.CharField(max_length=10)
+    category = models.CharField(
+        max_length=50, choices=ProviderEcommerce.categories())
+    price = models.FloatField(default=0.0)
+    supplier = models.ForeignKey(
+        "Supplier", on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        verbose_name = 'Produto'
+        verbose_name_plural = 'Produtos'
+
+    def __str__(self):
+        return f'{self.sku} - {self.name}'
+
+
+class RatingProduct(models.Model):
+    product = models.ForeignKey(
+        "Product", on_delete=models.SET_NULL, null=True)
+    client = models.ForeignKey(
+        Client, on_delete=models.SET_NULL, null=True)
+    rating = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f'{self.product.name} - {self.client.name}'
+
+    class Meta:
+        verbose_name = 'Avaliação'
+        verbose_name_plural = 'Avaliações'

@@ -117,7 +117,7 @@ class ProviderEcommerce(faker.providers.BaseProvider):
         return self.random_element(CATEGORIES)
 
     def categories():
-        lista = [];
+        lista = []
         for i in CATEGORIES:
             lista.append((i, i))
         return tuple(lista)

@@ -10,7 +10,8 @@ from bringel.pagination import CustomResultsSetPagination
 @api_view(['GET'])
 def getClients(request):
     """
-    Valid filters: name, username, email, cpf
+    Get all clients
+    Valid filters on parameters: name, username, email, cpf
     """
     users = Client.objects.filter()
     name = request.GET.get('name')
@@ -81,4 +82,5 @@ def deleteClient(request, pk):
         return Response({"error": "Cliente não existe"},
                         status=status.HTTP_404_NOT_FOUND)
     except RuntimeError:
-        return Response({"error": "Erro desconhecido"}, status=status.HTTP)
+        return Response({"error": "Erro desconhecido"},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)

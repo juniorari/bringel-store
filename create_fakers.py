@@ -4,7 +4,7 @@ def main():
     fake: Faker = Faker('pt_BR')
     fake.add_provider(ProviderEcommerce)
 
-    for _ in range(5):
+    for _ in range(10):
         obj = Supplier.objects.create(
             name=fake.company() + " " + fake.company_suffix(),
             email=fake.email(),
@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     import random
     from faker import Faker
-    from client.models import Product, Supplier, Client, RatingProduct
+    from product.models import Product, Supplier, Client, RatingProduct
     from django.contrib.auth.hashers import make_password
     from utils.faker_ecommerce import ProviderEcommerce
 
