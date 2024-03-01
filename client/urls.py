@@ -7,7 +7,9 @@ app_name = 'client'
 urlpatterns = [
     path('', views.ClientAPIList.as_view(), name='clients'),
     path('create', views.addClient, name='create_client'),
-    path('list/<str:pk>', views.getClient, name='read_client'),
-    path('update/<str:pk>', views.updateClient, name='update_client'),
-    path('delete/<str:pk>', views.deleteClient, name='delete_client'),
+    path('list/<int:pk>', views.getClient, name='read_client'),
+    path('update/<int:pk>', views.updateClient, name='update_client'),
+    path('delete/<int:pk>', views.deleteClient, name='delete_client'),
+    path('sugestion/<int:pk>', views.sugestionClient,
+         name='sugestion_clients'),
 ]
