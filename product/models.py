@@ -18,12 +18,13 @@ class Supplier(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=250, blank=True)
-    sku = models.CharField(max_length=10, blank=True)
+    sku = models.CharField(max_length=10, blank=True, unique=True)
     category = models.CharField(
         max_length=50, choices=ProviderEcommerce.categories())
     price = models.FloatField(default=0.0, blank=True)
     supplier = models.ForeignKey(
-        "Supplier", on_delete=models.SET_NULL, null=True, blank=True)
+        "Supplier", on_delete=models.SET_NULL, null=True,
+        blank=True, related_name='supplier')
 
     class Meta:
         verbose_name = 'Produto'

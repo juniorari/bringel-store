@@ -1,10 +1,12 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes  # noqa: E501
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 from .models import Product, PriceHistory
-from .serializers import ProductSerializer, PriceHistorySerializer
+from .serializers import ProductSerializer, ProductSerializerAddUpdate, PriceHistorySerializer  # noqa: E501
 from bringel.pagination import CustomResultsSetPagination
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser  # noqa: E501
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class ProductAPIList(ListAPIView):
@@ -15,6 +17,7 @@ class ProductAPIList(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     pagination_class = CustomResultsSetPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -43,6 +46,7 @@ class PriceHistoryAPIList(ListAPIView):
     queryset = PriceHistory.objects.all()
     serializer_class = PriceHistorySerializer
     pagination_class = CustomResultsSetPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         pk = self.kwargs.get('pk')
@@ -52,6 +56,8 @@ class PriceHistoryAPIList(ListAPIView):
 
 
 @api_view(['GET'])
+@authentication_classes([JWTAuthentication])  # correct auth class
+@permission_classes([IsAuthenticated])
 def getProduct(request, pk):
     try:
         data = Product.objects.get(id=pk)
@@ -63,8 +69,10 @@ def getProduct(request, pk):
 
 
 @api_view(['POST'])
+@authentication_classes([JWTAuthentication])  # correct auth class
+@permission_classes([IsAuthenticated])
 def addProduct(request):
-    serializer = ProductSerializer(data=request.data)
+    serializer = ProductSerializerAddUpdate(data=request.data)
 
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -73,11 +81,14 @@ def addProduct(request):
 
 
 @api_view(['PUT'])
+@authentication_classes([JWTAuthentication])  # correct auth class
+@permission_classes([IsAuthenticated])
 def updateProduct(request, pk):
     try:
         data = Product.objects.get(id=pk)
         old_price = data.price
-        serializer = ProductSerializer(instance=data, data=request.data)
+        serializer = ProductSerializerAddUpdate(
+            instance=data, data=request.data)
 
         serializer.is_valid(raise_exception=True)
         new_price = request.data.get('price', '')
@@ -97,6 +108,8 @@ def updateProduct(request, pk):
 
 
 @api_view(['DELETE'])
+@authentication_classes([JWTAuthentication])  # correct auth class
+@permission_classes([IsAdminUser])
 def deleteProduct(request, pk):
     try:
         data = Product.objects.get(id=pk)

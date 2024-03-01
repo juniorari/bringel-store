@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from ..models import Client
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 
 
 class ClientURLsTest(TestCase):
@@ -24,7 +26,7 @@ class ClientURLsTest(TestCase):
         self.assertNotEqual(url, '/client/1000000')
 
 
-class CLientHTTPResponseTest(TestCase):
+class ClientHTTPResponseTest(TestCase):
     def test_client_read_http_200(self):
         Client.objects.create(
             name='Teste Nome',
@@ -80,6 +82,52 @@ class CLientHTTPResponseTest(TestCase):
         url = reverse('client:create_client')
         response = self.client.post(url, post_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_api_list_client_must_send_jwt_token(self):
+        api_url = reverse('client:read_client', kwargs={'pk': 1})
+        response = self.client.post(api_url)
+        self.assertEqual(
+            response.status_code,
+            401
+        )
+
+    def jwt_get_auth_data(self):
+        user = get_user_model()
+        user.objects.create(
+            username='testenome',
+            email='email@email.com',
+            password='123456'
+        )
+        user.save()
+        print('USERRR', user, 'OIPOIUIO')
+        userdata = {
+            'username': 'testenome',
+            'password': '123456'
+        }
+
+        response = self.client.post(
+            '/token', data={**userdata}
+        )
+        return response
+
+    def test_login_with_jwt_token(self):
+        # response = self.jwt_get_auth_data
+        user = User.objects.create(
+            username='testenome',
+            password='123456'
+        )
+        user.save()
+        print(user)
+
+        response = self.client.get(
+            reverse('token_obtain_pair'), data={
+                'username': 'testenome',
+                'password': '123456'
+            }, follow=True
+        )
+        print('RESP=>>', response)
+        print(response)
+        # return response
 
     # def test_update_client_success_update_200(self):
     #     post_data = {

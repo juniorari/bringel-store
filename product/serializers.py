@@ -11,12 +11,19 @@ class SupplierSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    supplier = SupplierSerializer()
+    supplier = SupplierSerializer(read_only=False)
 
     class Meta:
         model = Product
         fields = ['id', 'name', 'sku', 'category', 'price', 'supplier']
         # depth = 1
+
+
+class ProductSerializerAddUpdate(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'sku', 'category', 'price', 'supplier']
 
 
 class ProductHistorySerializer(serializers.ModelSerializer):

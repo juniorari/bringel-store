@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 from pathlib import Path
 
@@ -31,9 +32,10 @@ INSTALLED_APPS = [
 
     'client',
     'product',
+    'corsheaders',
 
     'rest_framework',
-    # 'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     # 'oauth2_provider',
 ]
 
@@ -45,6 +47,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
+    # 'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'bringel.urls'
@@ -127,16 +131,21 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# OAUTH2_PROVIDER = {
-#     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'} # noqa: E501
-# }
-
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': ('oauth2_provider.contrib.rest_framework.OAuth2Authentication',), # noqa: E501
-#     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',), # noqa: E501
-# }
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'BLACKLIST_AFTER_ROTATION': False,
+    'SIGNING_KEY': os.environ.get('SECRET_KEY_JWT', 'INSECURE'),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'bringel.pagination.CustomResultsSetPagination',  # noqa: E501
     'PAGE_SIZE': 5
 }
@@ -144,3 +153,7 @@ REST_FRAMEWORK = {
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+
+
+# CORS_ALLOWED_ORIGINS = ['http://127.0.0.1:8888']
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost']

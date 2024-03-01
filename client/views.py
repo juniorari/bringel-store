@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes  # noqa: E501
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from rest_framework import status
@@ -6,6 +6,8 @@ from .models import Client
 from .serializers import ClientSerializer
 from product.models import RatingProduct
 from bringel.pagination import CustomResultsSetPagination
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser  # noqa: E501
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class ClientAPIList(ListAPIView):
@@ -16,6 +18,7 @@ class ClientAPIList(ListAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
     pagination_class = CustomResultsSetPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -38,6 +41,8 @@ class ClientAPIList(ListAPIView):
 
 
 @api_view(['GET'])
+@authentication_classes([JWTAuthentication])  # correct auth class
+@permission_classes([IsAuthenticated])
 def getClient(request, pk):
     try:
         user = Client.objects.get(id=pk)
@@ -49,6 +54,8 @@ def getClient(request, pk):
 
 
 @api_view(['POST'])
+@authentication_classes([JWTAuthentication])  # correct auth class
+@permission_classes([IsAuthenticated])
 def addClient(request):
     serializer = ClientSerializer(data=request.data)
 
@@ -59,6 +66,8 @@ def addClient(request):
 
 
 @api_view(['PUT'])
+@authentication_classes([JWTAuthentication])  # correct auth class
+@permission_classes([IsAuthenticated])
 def updateClient(request, pk):
     try:
         user = Client.objects.get(id=pk)
@@ -73,6 +82,8 @@ def updateClient(request, pk):
 
 
 @api_view(['DELETE'])
+@authentication_classes([JWTAuthentication])  # correct auth class
+@permission_classes([IsAdminUser])
 def deleteClient(request, pk):
     try:
         user = Client.objects.get(id=pk)
