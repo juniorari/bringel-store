@@ -2,16 +2,11 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from ..models import Client
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
+from rest_framework.test import APIClient
 
 
 class ClientURLsTest(TestCase):
-    def setUp(self) -> None:
-        return super().setUp()
-
-    def tearDown(self) -> None:
-        return super().tearDown()
 
     def test_client_home_url_is_correct(self):
         url = reverse('client:clients')
@@ -27,21 +22,43 @@ class ClientURLsTest(TestCase):
 
 
 class ClientHTTPResponseTest(TestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+        self.username = 'testeuser'
+        self.password = 'testpassword'
+        self.user = User.objects.create_user(
+            username=self.username, password=self.password)
+
+    def get_jwt_access_token(self):
+        # Chama a URL para obter o token de autenticação
+        response = self.client.post(
+            reverse('token_obtain_pair'),
+            {'username': self.username, 'password': self.password})
+        self.assertEqual(response.status_code, 200)
+
+        # Captura o token do response
+        token = response.data.get('access')
+        return token
+
     def test_client_read_http_200(self):
         Client.objects.create(
             name='Teste Nome',
             username='testenome',
             email='email@email.com',
-            cpf='123.456.789-00',
+            cpf='586.637.320-31',
             password='123456'
         )
-        url = reverse('client:read_client', kwargs={'pk': 1})
-        response = self.client.get(url)
+
+        url = reverse('client:read_client', kwargs={'pk': 2})
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_client_read_http_404(self):
         url = reverse('client:read_client', kwargs={'pk': 1})
-        response = self.client.get(url)
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_create_client_error_validation_required_field_cpf_400(self):
@@ -52,7 +69,9 @@ class ClientHTTPResponseTest(TestCase):
             'email': 'email@teste.net',
         }
         url = reverse('client:create_client')
-        response = self.client.post(url, post_data)
+        response = self.client.post(
+            url, post_data,
+            HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.content.decode(),
                          '{"cpf":["Este campo é obrigatório."]}')
@@ -66,7 +85,9 @@ class ClientHTTPResponseTest(TestCase):
             'cpf': '123.456.789-00'
         }
         url = reverse('client:create_client')
-        response = self.client.post(url, post_data)
+        response = self.client.post(
+            url, post_data,
+            HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.content.decode(),
                          '{"cpf":["O CPF 123.456.789-00 é inválido"]}')
@@ -80,72 +101,66 @@ class ClientHTTPResponseTest(TestCase):
             'cpf': '621.609.153-00'
         }
         url = reverse('client:create_client')
-        response = self.client.post(url, post_data)
+        response = self.client.post(
+            url,
+            post_data,
+            HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_api_list_client_must_send_jwt_token(self):
-        api_url = reverse('client:read_client', kwargs={'pk': 1})
-        response = self.client.post(api_url)
+        Client.objects.create(
+            name="usuario teste",
+            username="adminteste",
+            password="654321",
+            cpf="503.467.930-25",
+            email="email@email.scsom",
+        )
+        api_url = reverse('client:clients')
+        response = self.client.get(
+            api_url,
+            HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
         self.assertEqual(
             response.status_code,
-            401
+            status.HTTP_200_OK
         )
 
-    def jwt_get_auth_data(self):
-        user = get_user_model()
-        user.objects.create(
-            username='testenome',
-            email='email@email.com',
-            password='123456'
-        )
-        user.save()
-        print('USERRR', user, 'OIPOIUIO')
-        userdata = {
-            'username': 'testenome',
-            'password': '123456'
-        }
-
-        response = self.client.post(
-            '/token', data={**userdata}
-        )
-        return response
-
-    def test_login_with_jwt_token(self):
-        # response = self.jwt_get_auth_data
-        user = User.objects.create(
-            username='testenome',
-            password='123456'
-        )
-        user.save()
-        print(user)
-
+    def test_get_all_client(self):
+        url = reverse('client:clients')
         response = self.client.get(
-            reverse('token_obtain_pair'), data={
-                'username': 'testenome',
-                'password': '123456'
-            }, follow=True
-        )
-        print('RESP=>>', response)
-        print(response)
-        # return response
+            url,
+            HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
+        self.assertEqual(response.data.get('count'), 0)
 
-    # def test_update_client_success_update_200(self):
-    #     post_data = {
-    #         'name': 'Teste Cliente',
-    #         'username': 'testenome',
-    #         'password': '123456',
-    #         'email': 'email@teste.net',
-    #         'cpf': '621.609.153-00'
-    #     }
-    #     url = reverse('client:create_client')
-    #     print(url)
-    #     response = self.client.post(url, post_data)
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_update_client_success_update_200(self):
+        post_data = {
+            'name': 'Teste Cliente',
+            'username': 'testenome',
+            'password': '123456',
+            'email': 'email@teste.net',
+            'cpf': '405.664.140-40'
+        }
+        url = reverse('client:create_client')
+        print(url)
+        response = self.client.post(
+            url, post_data,
+            HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        id = response.data.get('id')
 
-    #     post_data = {
-    #         'name': 'Teste Cliente 2',
-    #         'username': 'teste2'
-    #     }
-    #     url = '/client/update/1'
-    #     response = self.client.put(url, post_data)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = reverse('client:clients')
+        response = self.client.get(
+            url,
+            HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
+        print(response.data)
+
+        post_data = {
+            'name': 'Teste Cliente 2',
+            'username': 'teste2',
+            'cpf': '405.664.140-40'
+        }
+        url = reverse('client:update_client', kwargs={'pk': id})
+        response = self.client.put(
+            url,
+            post_data,
+            HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
