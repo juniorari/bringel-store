@@ -5,10 +5,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from client.tasks import fibonacci, factorial, task_with_delay, get_name_rr, add  # noqa E501
 import time
+from drf_yasg.utils import swagger_auto_schema
 
 
+@swagger_auto_schema(operation_id='i can change name here',
+                     tags=['welcome'],
+                     method='get')
 @api_view(["GET"])
 def welcome(request):
+    """
+    Home page
+    """
     content = {"message": "Bem vindo à Bringel Store!"}
     return JsonResponse(content)
 
@@ -45,10 +52,9 @@ class CeleryAPIListView(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        print(request.data, 'Post method')
         # Get request data if needed
-        arg1 = request.data.get('arg1')
-        arg2 = request.data.get('arg2')
+        arg1 = request.data.get('arg1', 10)
+        arg2 = request.data.get('arg2', 5)
 
         # Call the Celery task
         result = add.delay(arg1, arg2)
@@ -57,6 +63,6 @@ class CeleryAPIListView(APIView):
             print("Tarefa rodando...")
             time.sleep(1)
 
-        response_data = {'task_id': result.result}
+        response_data = {'task_id': result.get()}
 
         return Response(response_data, status=status.HTTP_202_ACCEPTED)

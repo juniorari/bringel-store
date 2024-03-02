@@ -21,3 +21,10 @@ urlpatterns += [
          name='rating_product'),
     path('rating/create', addRating, name='rating_create'),
 ]
+
+# Suppliers
+# urlpatterns += [
+#     path('rating/list/<int:pk>', RatingProductAPIList.as_view(),
+#          name='rating_product'),
+#     path('rating/create', addRating, name='rating_create'),
+# ]

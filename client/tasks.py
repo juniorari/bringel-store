@@ -43,7 +43,7 @@ def task_with_delay():
 @shared_task
 def get_name_rr():
     time.sleep(10)
-    return "Tarefa com o get_name_rr completada"
+    return "Teste celery"
 
 
 @shared_task

@@ -56,7 +56,7 @@ class PriceHistoryAPIList(ListAPIView):
 
 
 @api_view(['GET'])
-@authentication_classes([JWTAuthentication])  # correct auth class
+@authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def getProduct(request, pk):
     try:
@@ -69,7 +69,7 @@ def getProduct(request, pk):
 
 
 @api_view(['POST'])
-@authentication_classes([JWTAuthentication])  # correct auth class
+@authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def addProduct(request):
     serializer = ProductSerializerAddUpdate(data=request.data)
@@ -81,7 +81,7 @@ def addProduct(request):
 
 
 @api_view(['PUT'])
-@authentication_classes([JWTAuthentication])  # correct auth class
+@authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def updateProduct(request, pk):
     try:
@@ -108,7 +108,7 @@ def updateProduct(request, pk):
 
 
 @api_view(['DELETE'])
-@authentication_classes([JWTAuthentication])  # correct auth class
+@authentication_classes([JWTAuthentication])
 @permission_classes([IsAdminUser])
 def deleteProduct(request, pk):
     try:

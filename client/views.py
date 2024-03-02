@@ -6,7 +6,7 @@ from .models import Client
 from .serializers import ClientSerializer
 from product.models import RatingProduct
 from bringel.pagination import CustomResultsSetPagination
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser  # noqa: E501
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser  # noqa: E501
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
@@ -41,7 +41,7 @@ class ClientAPIList(ListAPIView):
 
 
 @api_view(['GET'])
-@authentication_classes([JWTAuthentication])  # correct auth class
+@authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def getClient(request, pk):
     try:
@@ -54,7 +54,7 @@ def getClient(request, pk):
 
 
 @api_view(['POST'])
-@authentication_classes([JWTAuthentication])  # correct auth class
+@authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def addClient(request):
     serializer = ClientSerializer(data=request.data)
@@ -66,7 +66,7 @@ def addClient(request):
 
 
 @api_view(['PUT'])
-@authentication_classes([JWTAuthentication])  # correct auth class
+@authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def updateClient(request, pk):
     try:
@@ -82,7 +82,7 @@ def updateClient(request, pk):
 
 
 @api_view(['DELETE'])
-@authentication_classes([JWTAuthentication])  # correct auth class
+@authentication_classes([JWTAuthentication])
 @permission_classes([IsAdminUser])
 def deleteClient(request, pk):
     try:
@@ -98,6 +98,8 @@ def deleteClient(request, pk):
 
 
 @api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([AllowAny])
 def sugestionClient(request, pk):
     """
     Algoritmo de Recomendações:

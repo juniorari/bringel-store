@@ -61,5 +61,5 @@ class RatingProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RatingProduct
-        fields = ['id', 'product', 'client']
+        fields = ['id', 'rating', 'product', 'client']
         depth = 2  # expande todas as FK

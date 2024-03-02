@@ -22,10 +22,10 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
-    path('auth/', include('rest_framework.urls')),
-    path('welcome', views.welcome, name='welcome'),
+#     path('auth/', include('rest_framework.urls')),
+    path('', views.welcome, name='welcome'),
     path('celery-test', views.CeleryAPIListView.as_view(), name='celery-test'),
-    path('', views.error),
+    path('error', views.error),
 
     path('client/', include('client.urls')),
     path('product/', include('product.urls')),
