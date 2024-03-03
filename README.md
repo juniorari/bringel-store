@@ -179,3 +179,15 @@ De posse do token acrescente no Header conforme a seguir:
 ![Inserindo o token nas nos endpoints](bringel/imgs/image-3.png)
 
 Pronto, agora já tem acesso às rotas autenticadas.
+
+
+### Teste de Stress
+
+O projeto utiliza o `lucust` para executar o teste de stress.
+
+```sh
+$ locust -f client/tests/test_stress.py 
+```
+
+Acessar a url [http://0.0.0.0:8089/](http://0.0.0.0:8089/?tab=exceptions) para ver o teste
+
