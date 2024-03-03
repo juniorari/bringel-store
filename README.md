@@ -168,8 +168,7 @@ O projeto possui as seguintes características:
 
 Foi disponibilizada uma Colletion do Postman para acesso às APIs [https://www.postman.com/dark-resonance-179389/workspace/bringel/request/2889430-6467698f-cf5b-4b4c-8153-b562bc5432b0](https://www.postman.com/dark-resonance-179389/workspace/bringel/request/2889430-6467698f-cf5b-4b4c-8153-b562bc5432b0)
 
-Acesse o link e vá para o link para gerar o token de acesso, e copie o to
-ken gerado:
+Acesse o link e vá para o link para gerar o token de acesso, e copie o token gerado:
 
 ![Gerar token de acesso](bringel/imgs/image-2.png)
 
@@ -186,8 +185,8 @@ Pronto, agora já tem acesso às rotas autenticadas.
 O projeto utiliza o `lucust` para executar o teste de stress.
 
 ```sh
-$ locust -f client/tests/test_stress.py 
+$ locust -f client/tests/stress_test.py 
 ```
 
-Acessar a url [http://0.0.0.0:8089/](http://0.0.0.0:8089/?tab=exceptions) para ver o teste
+Acessar a url [http://0.0.0.0:8089/](http://0.0.0.0:8089/) para ver e acessar o teste
 
