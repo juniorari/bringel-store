@@ -2,6 +2,7 @@ from datetime import timedelta
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
     'client',
     'product',
     'corsheaders',
+    # 'db_log',
 
     'rest_framework',
     'rest_framework_simplejwt',
@@ -154,5 +156,20 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 
 
-# CORS_ALLOWED_ORIGINS = ['http://127.0.0.1:8888']
-# ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'db': {
+#             'level': 'DEBUG',
+#             'class': 'db_log.handlers.DBHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['db'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#     },
+# }

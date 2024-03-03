@@ -6,6 +6,9 @@ from rest_framework import status
 from client.tasks import fibonacci, factorial, task_with_delay, get_name_rr, add  # noqa E501
 import time
 from drf_yasg.utils import swagger_auto_schema
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @swagger_auto_schema(operation_id='i can change name here',
@@ -17,6 +20,11 @@ def welcome(request):
     Home page
     """
     content = {"message": "Bem vindo à Bringel Store!"}
+    logger.debug('DEG  acessou a  inicial')
+    logger.warning('WAR  acessou a  inicial')
+    logger.error('ERR  acessou a  inicial')
+    logger.info('IN Usurio acessou a página inicial')
+    logger.critical('CCUsuio acessou a  inicial')
     return JsonResponse(content)
 
 
