@@ -140,7 +140,7 @@ class ClientHTTPResponseTest(TestCase):
             'cpf': '405.664.140-40'
         }
         url = reverse('client:create_client')
-        print(url)
+
         response = self.client.post(
             url, post_data,
             HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
@@ -151,7 +151,6 @@ class ClientHTTPResponseTest(TestCase):
         response = self.client.get(
             url,
             HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}')
-        print(response.data)
 
         post_data = {
             'name': 'Teste Cliente 2',
