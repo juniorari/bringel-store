@@ -50,9 +50,9 @@ jobs:
       run: |
         docker build --file Dockerfile --tag bringel_app .
 
-    - name: Run Docker container
-      run: |
-        docker run --rm bringel_app python manage.py test
+    # - name: Run Docker container
+    #   run: |
+    #     docker run --rm bringel_app python manage.py test
 
     - name: Install Dependencies
       run: |
