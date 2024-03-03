@@ -20,11 +20,11 @@ def welcome(request):
     Home page
     """
     content = {"message": "Bem vindo à Bringel Store!"}
-    logger.debug('DEG  acessou a  inicial')
-    logger.warning('WAR  acessou a  inicial')
-    logger.error('ERR  acessou a  inicial')
-    logger.info('IN Usurio acessou a página inicial')
-    logger.critical('CCUsuio acessou a  inicial')
+    logger.debug('DEGUG CRITICAL Usuário acessou a página inicial')
+    logger.warning('WARNING CRITICAL Usuário acessou a página inicial')
+    logger.error('ERROR Usuário acessou a página inicial')
+    logger.info('INFO Usuário acessou a página inicial')
+    logger.critical('CRITICAL Usuário acessou a página inicial')
     return JsonResponse(content)
 
 
